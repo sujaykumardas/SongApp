@@ -1,0 +1,177 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>WELCOME TO SOUND CLOUD</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
+    <script src="http://localhost:5000/jquery.js"></script>
+
+    <style>
+    .fa {
+        font-size: 18px;
+        position: relative;
+        right: 0px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .fa:hover {
+        color: darkblue;
+    }
+    </style>
+
+
+    <div class="page-header">
+    <h4 style="margin-left: 1050px;">
+        <div style="color: #527ab7">
+            <% if(typeof user !== 'undefined') %>
+                Hiiii..<%=user.name %>
+        </div>
+        <div style="color: #527ab7">
+            
+            <a href="/logout">Log Out</a>
+        </div>        
+    </h4>
+
+    <script>
+        
+        function comment(x) {             
+            $(x).next().toggle();            
+        }
+        function reply(x) {             
+            $(x).next().toggle();            
+        }
+
+        $(function() {
+            $('.like-button').click(function(e){
+                const songId = this.getAttribute('value');
+                
+                let obj = $(this);                
+                if( obj.data('liked') ){
+                    obj.data('liked', false);
+                    obj.html('Like');
+                    console.log("obj",this);
+                    $.ajax({
+                    url: '/song/'+songId+'/unlike',
+                    type: 'PUT',                    
+                    success: function(data) {
+                            $("#like").text(parseInt($("#like").text())-1);
+                            console.log('unLike was performed.');
+                            }
+                    });
+                }
+                else{
+                    obj.data('liked', true);
+                    obj.html('Unlike');
+                    console.log("obj",this);
+                    $.ajax({
+                    url: '/song/'+songId+'/like',
+                    type: 'PUT',                    
+                    success: function(data) {
+                            $("#like").text(parseInt($("#like").text())+1);
+                            console.log('Like was performed.');
+                            }
+                    });                   
+                }
+            });
+        });
+    </script>    
+    </div>
+
+    <style>
+        body        { padding-top:80px; }
+        <i onclick="myFunction(this)" class="fa fa-thumbs-up"></i>
+    </style>
+</head>
+
+<body>        
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-lock"></span>WELCOME TO SOUND CLOUD</h1>
+
+        <p>LIST OF SONGS</p>
+
+        <% typeof data !== 'undefined' && data.forEach(function(song, index) { %>
+            
+            <br>
+            <%=names[index] %>
+            <br>
+            <audio controls>
+                <source src="http://localhost:5000<%=song %>" type="audio/ogg">
+            </audio><br>
+
+            <span class="like-button"  value="<%=ids[index]%>">Like</span>
+            &nbsp
+            <span id="like" class="like"> <%=likes[index]%></span>
+            <i class="btn btn-default" onclick="comment(this)">COMMENT</i>
+
+            <form action="/song/<%=ids[index]%>/comment" id="usrform2" method="post" style="display: none">
+
+                <textarea id="comment" name="comment" ></textarea>
+                <br>                
+                <input type="submit" id="submit" class="btn btn-default" value="SUBMIT" >
+                </br>
+
+            </form> 
+            <br>
+            COMMENTS 
+            <br>
+            <% typeof comments[index] !== 'undefined' && comments[index].forEach(function(comments, index) { %>
+                <br>
+                <%=comments.commentId.comment %>
+                BY:  
+                <%=comments.commentId.commentedByName %>
+                &nbsp
+                ON:  
+                <%=comments.commentId.commentDate.toDateString() %>
+                <br>
+                REPLIES
+                <br>
+                <%console.log("reply---------");                            
+                console.log(); %>
+                <% typeof replies !=='undefined' && replies.forEach(function(reply,ind) { %>
+                    <% console.log(comments.commentId.comment === reply.key) %>
+                    <%if(comments.commentId.comment===reply.key){%>
+                    <% reply.value.forEach(function(creply) { %>
+                            <%=creply.reply %>
+                            &nbsp
+                            ON: 
+                            <%=creply.replyDate.toDateString()%>
+                            &nbsp
+                            BY: 
+                            <%=creply.repliedByName %>
+                            &nbsp
+                            <br>
+                        <% });} %>
+                <% }); %>                         
+
+            <i class="btn btn-default"  onclick="reply(this)">REPLY</i>
+
+            <form action="/song/<%=ids[index]%>/comments/<%=comments.commentId._id%>/reply %>" id="usrform1" method="post" style="display: none">
+
+                <textarea id="reply" name="reply" ></textarea>
+                <br>                
+                <input type="submit" id="submit" class="btn btn-default" value="SUBMIT" >
+                <br>
+            </form>
+            <br>
+            <% }); %>           
+                                   
+        <% }); %>
+
+        <br>
+        <a href="/myprofile" class="btn btn-default">
+            <span class="fa fa-user"></span> 
+        PROFILE
+        </a>
+
+        <a href="/fileupload" class="btn btn-default">
+            <span class="fa fa-user"></span>
+        UPLOAD SONG
+        </a>
+
+    </div>
+</div>
+</body>
+</html>

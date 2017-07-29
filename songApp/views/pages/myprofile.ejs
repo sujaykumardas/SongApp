@@ -1,0 +1,80 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>WELCOME TO SOUND CLOUD</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <script src="http://localhost:5000/jquery.js"></script>
+    <div class="page-header">
+    <h4 style="margin-left: 1050px;">
+        <div style="color: #527ab7">
+            <% if(typeof user !== 'undefined') %>
+            Hiiii..<%=user.name %>
+        </div>
+        <div style="color: #527ab7">
+            
+            <a href="/logout">Log Out</a>
+        </div>        
+    </h4>  
+    </div>
+
+    <script>
+
+      $(function() {
+            $('.deleteSong').click(function(e){
+                
+                const songId = this.getAttribute('id');
+                let obj = $(this);
+                
+                    $.ajax({
+                    url: '/songs/'+songId,
+                    type: 'DELETE',                    
+                    success: function(data) {                                              
+                            console.log('delete was performed.');
+                            }
+                    });                
+            });
+      });          
+
+    </script>
+    <style>
+        body        { padding-top:80px; }
+    </style>
+</head>
+<body>        
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-lock"></span>WELCOME TO SOUND CLOUD</h1>
+
+        <p>YOUR SONGS</p>
+
+        <% typeof data !== 'undefined' && data.forEach(function(song, index) { %>
+            <% console.log(song, index) %>
+            <br>
+            <%= names[index]%>
+            <br>
+
+            <audio controls>
+                <source src="http://localhost:5000<%=song %>" type="audio/ogg">
+            </audio>
+
+            <br>
+            <a href="/songs/<%= ids[index]%>" class="btn btn-default">EDIT</a>
+            <br>
+
+            <input type="button" id="<%= ids[index]%>" class="deleteSong" value="DELETE">
+
+            &nbsp
+
+            <br>
+
+        <% }); %>
+
+            <br> 
+        <a href="/" class="btn btn-default"><span class="fa fa-user"></span> HOME</a>
+        
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!-- views/fileupload.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>SoundCloud</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <script src="http://localhost:5000/jquery.js"></script>
+    <div class="page-header">
+    <h4 style="margin-left: 1050px;">
+        <div style="color: #527ab7">
+            <% if(typeof user !== 'undefined') %>
+            Hiiii..<%=user.name %>
+        </div>
+        <div style="color: #527ab7">            
+            <a href="/logout">Log Out</a>
+        </div>        
+    </h4>
+    <style>
+        body        { padding-top:80px; }
+    </style>
+    <script>
+        $(function() {
+            $('.submitSong').click(function(e){                
+                const songId = this.getAttribute('id');
+                console.log("/songs"+songId);
+                    $.ajax({
+                    url: '/songs/'+songId,
+                    type: 'PUT',                    
+                    data: {"name": document.getElementById("name").value,"description": document.getElementById("desc").value },
+                    success: function() {
+                            console.log('edit was performed.');                            
+                            }
+                    });
+                
+            });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+<div class="col-sm-6 col-sm-offset-3">
+    <h1><span class="fa fa-sign-in"></span> EDIT SONG</h1>
+
+    
+
+    <!-- EDIT FORM -->
+    <form>
+        <div class="form-group">
+            <label>Song Name</label>
+            <input type="text" id="name" class="form-control" name="songName" value="<%=song.songName%>">
+        </div>
+        
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="desc" class="form-control" name="description" value="<%=song.description%>">
+        </div>
+
+        <input type="button" id="<%= song._id%>" class="submitSong" value="SUBMIT">&nbsp
+
+    </form>
+
+    <hr>
+
+    
+    <p>Or go <a href="/">home</a>.</p>
+
+</div>
+
+</div>
+</body>
+</html>
