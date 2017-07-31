@@ -51,12 +51,12 @@
                 if( obj.data('liked') ){
                     obj.data('liked', false);
                     obj.html('Like');
-                    console.log("obj",this);
+                    console.log("obj",$(this).next().text(parseInt($(this).next().text())-1));
                     $.ajax({
                     url: '/song/'+songId+'/unlike',
                     type: 'PUT',                    
                     success: function(data) {
-                            $("#like").text(parseInt($("#like").text())-1);
+                            
                             console.log('unLike was performed.');
                             }
                     });
@@ -64,12 +64,12 @@
                 else{
                     obj.data('liked', true);
                     obj.html('Unlike');
-                    console.log("obj",this);
+                    console.log("obj",$(this).next().text(parseInt($(this).next().text())+1));
                     $.ajax({
                     url: '/song/'+songId+'/like',
                     type: 'PUT',                    
                     success: function(data) {
-                            $("#like").text(parseInt($("#like").text())+1);
+                            
                             console.log('Like was performed.');
                             }
                     });                   
