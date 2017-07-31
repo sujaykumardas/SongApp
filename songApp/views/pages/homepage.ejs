@@ -92,21 +92,21 @@
 
         <p>LIST OF SONGS</p>
 
-        <% typeof data !== 'undefined' && data.forEach(function(song, index) { %>
+        <% typeof data !== 'undefined' && data.forEach(function(song, indexs) { %>
             
             <br>
-            <%=names[index] %>
+            <%=names[indexs] %>
             <br>
             <audio controls>
                 <source src="http://localhost:5000<%=song %>" type="audio/ogg">
             </audio><br>
 
-            <span class="like-button"  value="<%=ids[index]%>">Like</span>
+            <span class="like-button"  value="<%=ids[indexs]%>">Like</span>
             &nbsp
-            <span id="like" class="like"> <%=likes[index]%></span>
+            <span id="like" class="like"> <%=likes[indexs]%></span>
             <i class="btn btn-default" onclick="comment(this)">COMMENT</i>
 
-            <form action="/song/<%=ids[index]%>/comment" id="usrform2" method="post" style="display: none">
+            <form action="/song/<%=ids[indexs]%>/comment" id="usrform2" method="post" style="display: none">
 
                 <textarea id="comment" name="comment" ></textarea>
                 <br>                
@@ -117,7 +117,7 @@
             <br>
             COMMENTS 
             <br>
-            <% typeof comments[index] !== 'undefined' && comments[index].forEach(function(comments, index) { %>
+            <% typeof comments[indexs] !== 'undefined' && comments[indexs].forEach(function(comments, indexc) { %>
                 <br>
                 <%=comments.commentId.comment %>
                 BY:  
@@ -148,7 +148,7 @@
 
             <i class="btn btn-default"  onclick="reply(this)">REPLY</i>
 
-            <form action="/song/<%=ids[index]%>/comments/<%=comments.commentId._id%>/reply %>" id="usrform1" method="post" style="display: none">
+            <form action="/song/<%=ids[indexs]%>/comments/<%=comments.commentId._id%>/reply %>" id="usrform1" method="post" style="display: none">
 
                 <textarea id="reply" name="reply" ></textarea>
                 <br>                

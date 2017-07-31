@@ -9,35 +9,38 @@ import {Reply} from '../models/reply';
 export const setHomePage = (req, res ,next) => {
 
   Song.find({}, function(err, songs) {
-    console.log("homepage",req.user);
+    console.log("song print",songs);
     if(err){
       console.log(err);
     }
-    req.i=0;
     req.data=[];
     req.songNames=[];
     req.songId=[];
     req.comments=[];
     req.likes=[];
-    req.reply=[{}];
+    req.reply=[];
 
-    /*Comment.find({}, function(err, comm_arr) {
+    Comment.find({}, function(err, comm_arr) {
       if(err){
         console.log(err);
-      }*/
-      /*else{
+      }
+      else{
         console.log("comments",comm_arr);
         if(comm_arr.length>0){
+    //let i=0;
           comm_arr.forEach(function(u, index)  {
-            req.reply[req.i].key=u.comment;
+            console.log(u.comment,index);
+            req.reply[index]={};
+            req.reply[index].key=u.comment;
             Reply.find({repliedOnComment:u._id}, function(err, reps){
               if(err){
                 console.log(err);
-              }*/
-              /*else{              
-                console.log("rep",reps);
-                console.log("replies",req.reply);
-                req.i++;*/
+              }
+              else{              
+                req.reply[index].value=reps;
+                
+                console.log("rep",index,req.reply);
+               
                 songs.forEach(function(song){             
              	    req.data.push(song.songPath);
                   req.songNames.push(song.songName);
@@ -47,25 +50,25 @@ export const setHomePage = (req, res ,next) => {
                     req.comments.push(song.comments);
                   }
                 });
-                next();
-                /*if(comm_arr.length==0){
+                //next();
+                if(comm_arr.length==0){
                   next();
                 }
                 else if(index+1 === comm_arr.length){
                   next();
-                }*/
+                }
                 
-/*              }
+              }
             });
-
+            //i++;
           });
         }
       }
     });
-       */
+       
   }).populate('comments.commentId');
 };
 
 export const renderHomepage = (req, res) => {    
-    res.render('pages/homepage',{data:req.data, user:req.user, names:req.songNames, ids:req.songId, comments:req.comments, likes:req.likes});//, replies:req.reply});
+    res.render('pages/homepage',{data:req.data, user:req.user, names:req.songNames, ids:req.songId, comments:req.comments, likes:req.likes, replies:req.reply});
 };

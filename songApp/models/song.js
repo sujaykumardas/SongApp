@@ -33,7 +33,8 @@ let songSchema = new Schema({
   likes         : [{ 
   	userId: { 
       type: ObjectId, 
-      ref: 'User'
+      ref: 'User',
+      sparse: true
     } 
   }],
   comments : [ { 
